@@ -1,3 +1,6 @@
+import mongoose from "mongoose"
+import Phone from "../models/phone.model.js";
+
 export const getPhones = async (req, res) => {
     res.send("Sending all the Phones")
 }

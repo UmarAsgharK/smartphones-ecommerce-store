@@ -8,7 +8,7 @@ const port = 5000
 app.use(express.json())
 
 // Use the phones route
-app.use("/phones", phoneRoutes)
+app.use("/api/phones", phoneRoutes)
 
 app.listen(port, () => {
   connectDB()
