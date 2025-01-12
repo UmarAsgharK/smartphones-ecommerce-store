@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Phone from "../models/phone.model.js";
 import connectDB from "../config/db.js"; // Your database connection logic
 
