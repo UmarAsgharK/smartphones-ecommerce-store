@@ -12,33 +12,14 @@ const phoneSchema = new mongoose.Schema({
         enum: [
             "Apple",
             "Samsung",
-            "Huawei",
             "Xiaomi",
             "Oppo",
             "Vivo",
-            "Realme",
             "Nokia",
             "Sony",
             "LG",
-            "HTC",
             "OnePlus",
-            "Lenovo",
-            "Motorola",
-            "Asus",
-            "Alcatel",
             "Google",
-            "ZTE",
-            "Meizu",
-            "Honor",
-            "BlackBerry",
-            "Panasonic",
-            "Micromax",
-            "Infinix",
-            "Tecno",
-            "Itel",
-            "QMobile",
-            "Dcode",
-            "Haier Pakistan",
             "Other"
 
         ],
@@ -46,6 +27,10 @@ const phoneSchema = new mongoose.Schema({
     description: {
         type: String,
         maxlength: 500,
+    },
+    sellerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
     price: {
         type: Number,
@@ -55,12 +40,11 @@ const phoneSchema = new mongoose.Schema({
     location: {
         type: String,
         require: true,
-        maxlength: 100,
+        maxlength: 200,
     },
     images: {
         type: [String],
         required: true,
-
     },
     createdAt: {
         type: Date,

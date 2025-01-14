@@ -1,6 +1,7 @@
 import express from "express"
-const router = express.Router()
 import { getPhones, createPhone, updatePhoneById, getPhoneById, deletePhoneById } from "../controllers/phone.controller.js"
+
+const router = express.Router()
 
 router.get("/", getPhones)
 router.post("/", createPhone)
