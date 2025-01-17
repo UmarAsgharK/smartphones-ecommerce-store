@@ -55,20 +55,23 @@ export const getCart = async (req, res) => {
 // Place an order
 export const placeOrder = async (req, res) => {
     try {
-        const cart = await Cart.findOne({ userId: req.user.id });
+        const cart = await Cart.findOne({ userId: req.user.id }).populate('items.productId');;
 
         if (!cart || cart.items.length === 0) {
             return res.status(400).json({ message: "Your cart is empty" });
         }
 
+        console.log("Here");
+
         const order = new Order({
             buyerId: req.user.id,
-            sellerId: cart.items[0].productId.sellerId, // Assuming all items are from the same seller
+            sellerId: cart.items[0].productId.seller, // Assuming all items are from the same seller
             items: cart.items,
             totalAmount: cart.totalPrice,
             status: "pending",
         });
 
+        // console.log(cart.itms[0].productId);
         await order.save();
 
         // Clear the cart after order placement
@@ -85,7 +88,8 @@ export const placeOrder = async (req, res) => {
 // Add a review for a product
 export const addReview = async (req, res) => {
     try {
-        const { productId, rating, comment } = req.body;
+        const { rating, comment } = req.body;
+        const { productId } = req.params;
 
         const product = await Product.findById(productId);
 

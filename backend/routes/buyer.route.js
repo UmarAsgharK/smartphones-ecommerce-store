@@ -33,6 +33,6 @@ router
 router.get("/orders/:id", getOrderDetails); // Get details of a specific order
 
 // Review Routes
-router.post("/reviews", addReview); // Add a review for a product
+router.post("/reviews/:productId", addReview); // Add a review for a product
 
 export default router;
