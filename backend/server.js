@@ -6,8 +6,9 @@ import connectDB from "./config/db.js";
 // Import routes
 import authRoutes from "./routes/auth.route.js";
 import adminRoutes from "./routes/admin.route.js";
-// import sellerRoutes from "./routes/seller.route.js";
-// import buyerRoutes from "./routes/buyer.route.js";
+import sellerRoutes from "./routes/seller.route.js";
+import produtRoutes from "./routes/product.route.js";
+import buyerRoutes from "./routes/buyer.route.js";
 
 // Initialize environment variables and database
 dotenv.config();
@@ -33,8 +34,9 @@ app.get("/api/health", (req, res) => {
 // Define API Routes
 app.use("/api/auth", authRoutes); // Authentication and authorization routes
 app.use("/api/admin", adminRoutes); // Admin-specific routes
-// app.use("/api/seller", sellerRoutes); // Seller-specific routes
-// app.use("/api/buyer", buyerRoutes); // Buyer-specific routes
+app.use("/api/seller", sellerRoutes); // Seller-specific routes
+app.use("/api/products", produtRoutes); // product-specific routes. Anyone can access it
+app.use("/api/buyer", buyerRoutes); // Buyer-specific routes
 
 // Error handling middleware
 app.use((err, req, res, next) => {

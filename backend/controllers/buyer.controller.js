@@ -1,180 +1,133 @@
-import Product from "../models/product.model.js";
 import Cart from "../models/cart.model.js";
 import Order from "../models/order.model.js";
+import Product from "../models/product.model.js";
 import Review from "../models/review.model.js";
 
-// 1. View All Products
-export const getAllProducts = async (req, res) => {
-    try {
-        const products = await Product.find({ stock: { $gt: 0 } }); // Fetch only in-stock products
-        res.status(200).json({ success: true, products });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Failed to fetch products", error: error.message });
-    }
-};
-
-// 2. View a Product by ID
-export const getProductById = async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.productId);
-        if (!product) {
-            return res.status(404).json({ success: false, message: "Product not found" });
-        }
-        res.status(200).json({ success: true, product });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Failed to fetch product", error: error.message });
-    }
-};
-
-// 3. Add Product to Cart
+// Add product to cart
 export const addToCart = async (req, res) => {
     try {
         const { productId, quantity } = req.body;
-
-        if (!productId || !quantity) {
-            return res.status(400).json({ success: false, message: "Product ID and quantity are required" });
-        }
-
-        // Fetch product details
         const product = await Product.findById(productId);
-        if (!product || product.stock < quantity) {
-            return res.status(400).json({ success: false, message: "Product not available in the requested quantity" });
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
         }
 
-        // Reduce stock in the Product model
-        product.stock -= quantity;
-        await product.save();
+        let cart = await Cart.findOne({ userId: req.user.id });
 
-        // Add product to the cart
-        let cart = await Cart.findOne({ buyer: req.user._id });
         if (!cart) {
-            cart = new Cart({ buyer: req.user._id, items: [] });
+            cart = new Cart({ userId: req.user.id, items: [], totalPrice: 0 });
         }
 
-        // Check if the product is already in the cart
-        const existingItemIndex = cart.items.findIndex(item => item.product.toString() === productId);
-        if (existingItemIndex !== -1) {
-            cart.items[existingItemIndex].quantity += quantity;
+        // Check if product already in cart
+        const existingItem = cart.items.find(item => item.productId.toString() === productId);
+        if (existingItem) {
+            existingItem.quantity += quantity;
         } else {
-            cart.items.push({ product: productId, quantity });
+            cart.items.push({ productId, quantity, price: product.price });
         }
 
-        // Recalculate the totalAmount
-        cart.totalAmount = cart.items.reduce((total, item) => {
-            return total + item.quantity * product.price;
-        }, 0);
+        // Update total price
+        cart.totalPrice = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
 
-        // Save the cart
-        const updatedCart = await cart.save();
-        res.status(200).json({ success: true, cart: updatedCart });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Failed to add product to cart", error: error.message });
+        await cart.save();
+        res.status(200).json(cart);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
     }
 };
 
-
-// 4. View Cart
+// Get the cart
 export const getCart = async (req, res) => {
     try {
-        const cart = await Cart.findOne({ buyer: req.user._id }).populate("items.product", "name price");
+        const cart = await Cart.findOne({ userId: req.user.id }).populate('items.productId');
+
         if (!cart) {
-            return res.status(404).json({ success: false, message: "Cart not found" });
+            return res.status(404).json({ message: "Cart not found" });
         }
-        res.status(200).json({ success: true, cart });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Failed to fetch cart", error: error.message });
+
+        res.status(200).json(cart);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
     }
 };
 
-// 5. Place an Order
+// Place an order
 export const placeOrder = async (req, res) => {
     try {
-        const { shippingAddress } = req.body;
-
-        // Fetch the buyer's cart
-        const cart = await Cart.findOne({ buyer: req.user._id }).populate("items.product");
+        const cart = await Cart.findOne({ userId: req.user.id });
 
         if (!cart || cart.items.length === 0) {
-            return res.status(400).json({ success: false, message: "Cart is empty" });
+            return res.status(400).json({ message: "Your cart is empty" });
         }
 
-        let totalAmount = 0;
-        const orderItems = [];
-
-        // Verify product availability and calculate total
-        for (let item of cart.items) {
-            const product = item.product;
-            if (product.stock < item.quantity) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Insufficient stock for ${product.name}`,
-                });
-            }
-
-            totalAmount += product.price * item.quantity;
-            orderItems.push({
-                product: product._id,
-                quantity: item.quantity,
-            });
-
-            // Reduce stock in the product collection
-            product.stock -= item.quantity;
-            await product.save();
-        }
-
-        // Create the order
         const order = new Order({
-            buyer: req.user._id,
-            seller: cart.items[0].product.seller, // Assuming the seller is the same for all products
-            products: orderItems,
-            totalAmount,
-            shippingAddress,
+            buyerId: req.user.id,
+            sellerId: cart.items[0].productId.sellerId, // Assuming all items are from the same seller
+            items: cart.items,
+            totalAmount: cart.totalPrice,
+            status: "pending",
         });
 
-        // Save the order
         await order.save();
 
-        // Clear the cart after successful order
-        await Cart.findOneAndDelete({ buyer: req.user._id });
+        // Clear the cart after order placement
+        cart.items = [];
+        cart.totalPrice = 0;
+        await cart.save();
 
-        res.status(201).json({
-            success: true,
-            message: "Order placed successfully",
-            order,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Failed to place order",
-            error: error.message,
-        });
+        res.status(201).json(order);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
     }
 };
 
-// 6. Add a Review
+// Add a review for a product
 export const addReview = async (req, res) => {
     try {
         const { productId, rating, comment } = req.body;
 
-        if (!productId || !rating) {
-            return res.status(400).json({ success: false, message: "Product ID and rating are required" });
-        }
-
         const product = await Product.findById(productId);
+
         if (!product) {
-            return res.status(404).json({ success: false, message: "Product not found" });
+            return res.status(404).json({ message: "Product not found" });
         }
 
         const review = new Review({
-            product: productId,
-            buyer: req.user._id,
+            productId,
+            userId: req.user.id,
             rating,
             comment,
         });
 
         await review.save();
-        res.status(201).json({ success: true, message: "Review added successfully", review });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Failed to add review", error: error.message });
+        res.status(201).json(review);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
+
+// Get all orders for the buyer
+export const getOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ buyerId: req.user.id }).populate('items.productId');
+        res.status(200).json(orders);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+};
+
+// Get order details
+export const getOrderDetails = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id).populate('items.productId');
+
+        if (!order || order.buyerId.toString() !== req.user.id) {
+            return res.status(404).json({ message: "Order not found or unauthorized access" });
+        }
+
+        res.status(200).json(order);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
     }
 };

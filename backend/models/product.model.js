@@ -1,92 +1,107 @@
 import mongoose from "mongoose";
 
-const productSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, "Product name is required"],
-        trim: true,
-    },
-    brand: {
-        type: String,
-        required: [true, "Brand name is required"],
-    },
-    model: {
-        type: String,
-        required: [true, "Model is required"],
-        trim: true,
-    },
-    price: {
-        type: Number,
-        required: [true, "Price is required"],
-        min: [0, "Price cannot be negative"],
-    },
-    description: {
-        type: String,
-        trim: true,
-    },
-    specifications: {
-        screenSize: {
-            type: String,
-            required: true,
-        },
-        ram: {
-            type: String,
-            required: true,
-        },
-        storage: {
-            type: String,
-            required: true,
-        },
-        camera: {
-            type: String,
-        },
-        battery: {
-            type: String,
-        },
-        processor: {
-            type: String,
-        },
-        os: {
-            type: String,
-            required: true,
-        },
-        networkSupport: {
-            type: [String], // Example: ['4G', '5G', 'WiFi']
-        },
-    },
-    seller: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+const specificationSchema = new mongoose.Schema({
+    screenSize: {
+        type: Number, // Screen size in inches
         required: true,
+        min: [3, "Screen size must be at least 3 inches"],
     },
-    stock: {
-        type: Number,
+    ram: {
+        type: Number, // RAM in GB
         required: true,
-        min: [0, "Stock cannot be negative"],
-        default: 1,
+        min: [1, "RAM must be at least 1 GB"],
     },
-    images: {
-        type: [String], // Array of image URLs
-        validate: [arrayLimit, "You can upload up to 5 images"],
+    storage: {
+        type: Number, // Storage in GB
+        required: true,
+        min: [8, "Storage must be at least 8 GB"],
     },
-    status: {
+    camera: {
+        type: Number, // Primary camera resolution in MP
+        min: [1, "Camera resolution must be at least 1 MP"],
+    },
+    battery: {
+        type: Number, // Battery capacity in mAh
+        min: [1000, "Battery capacity must be at least 1000 mAh"],
+    },
+    processor: {
+        type: String, // Processor name
+        required: true,
+        trim: true,
+    },
+    os: {
         type: String,
-        enum: ["active", "inactive"],
-        default: "active",
+        required: true,
+        enum: ["Android", "iOS", "Windows"],
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
-        type: Date,
+    networkSupport: {
+        type: [String],
+        enum: ["2G", "3G", "4G", "5G", "WiFi"],
     },
 });
 
-// Custom validator for the images array
-function arrayLimit(val) {
-    return val.length <= 5;
-}
+const productSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: [true, "Product name is required"],
+            trim: true,
+        },
+        brand: {
+            type: String,
+            required: [true, "Brand name is required"],
+            enum: [
+                "Apple",
+                "Samsung",
+                "Xiaomi",
+                "Oppo",
+                "Vivo",
+                "OnePlus",
+                "Google",
+                "Huawei",
+            ],
+        },
+        price: {
+            type: Number,
+            required: [true, "Price is required"],
+            min: [0, "Price cannot be negative"],
+        },
+        description: {
+            type: String,
+            trim: true,
+        },
+        specifications: {
+            type: specificationSchema,
+            required: true,
+        },
+        seller: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "user",
+            required: true,
+        },
+        stock: {
+            type: Number,
+            required: true,
+            min: [0, "Stock cannot be negative"],
+            default: 1,
+        },
+        images: {
+            type: [String], // Array of image URLs
+            validate: {
+                validator: function (val) {
+                    return val.length <= 5;
+                },
+                message: "You can upload up to 5 images",
+            },
+        },
+        status: {
+            type: String,
+            enum: ["active", "inactive"],
+            default: "active",
+        },
+    },
+    { timestamps: true } // Automatically handles createdAt and updatedAt
+);
 
 const Product = mongoose.model("Product", productSchema);
 
