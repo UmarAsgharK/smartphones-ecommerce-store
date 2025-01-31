@@ -6,11 +6,6 @@ const orderSchema = new mongoose.Schema({
         ref: 'User', // Refers to the "users" collection
         required: true,
     },
-    sellerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Refers to the "users" collection
-        required: true,
-    },
     items: [
         {
             productId: {
@@ -21,16 +16,23 @@ const orderSchema = new mongoose.Schema({
             quantity: {
                 type: Number,
                 required: true,
+                min: 1
             },
             price: {
                 type: Number,
                 required: true,
+                min: 0
             },
         },
     ],
     totalAmount: {
         type: Number,
         required: true,
+        min: 0
+    },
+    stripeSessionId: {
+        type: String,
+        unqiue: true
     },
     status: {
         type: String,
