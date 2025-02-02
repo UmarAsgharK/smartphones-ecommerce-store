@@ -31,27 +31,45 @@ import AdminOrders from "./pages/admin/Orders";
 // Components
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import GuestRoute from "./components/GuestRoute"; // Import GuestRoute
 import Logout from "./components/Logout";
 
 function App() {
   return (
     <>
-      {/* Navbar */}
       <Navbar />
       <h1>😀😁😂How are you doing🤣😃😄</h1>
-      {/* Main Content Area */}
       <div className="main-container">
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/products/:productId" element={<ProductDetails />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+
+          {/* Wrap public pages that should not be accessible once logged in */}
+          <Route
+            path="/register"
+            element={
+              <GuestRoute>
+                <Register />
+              </GuestRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <GuestRoute>
+                <Login />
+              </GuestRoute>
+            }
+          />
           <Route path="/logout" element={<Logout />} />
 
+          {/* Note: You already have a public route for "add-product" and "payment". 
+              If these pages should be protected, you might consider moving them under the proper role routes. */}
+
           {/* Buyer Routes (Protected) */}
-          <Route element={<ProtectedRoute role="buyer" />}>
+          <Route element={<ProtectedRoute allowedRoles={["buyer"]} />}>
             <Route path="/buyer">
               <Route path="cart" element={<Cart />} />
               <Route path="checkout" element={<Checkout />} />
@@ -63,7 +81,7 @@ function App() {
           </Route>
 
           {/* Seller Routes (Protected) */}
-          <Route element={<ProtectedRoute role="seller" />}>
+          <Route element={<ProtectedRoute allowedRoles={["seller"]} />}>
             <Route path="/seller">
               <Route path="add-product" element={<AddProductForm />} />
               <Route path="products" element={<SellerProducts />} />
@@ -73,7 +91,7 @@ function App() {
           </Route>
 
           {/* Admin Routes (Protected) */}
-          <Route element={<ProtectedRoute role="admin" />}>
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/admin">
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="users" element={<AdminUsers />} />

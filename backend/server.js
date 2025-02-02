@@ -21,7 +21,13 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors())
+const corsOptions = {
+  origin: 'http://localhost:5173', // Frontend URL (Adjust this if you're using a different port)
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Allow credentials (cookies) to be sent
+};
+app.use(cors(corsOptions));
 // app.use(cors({
 //   origin: process.env.CLIENT_URL || "*", // Update based on your front-end domain for security
 //   methods: ["GET", "POST", "PATCH", "DELETE"], // Restrict allowed methods

@@ -1,12 +1,9 @@
-/* GlassmorphicNavbar.css */
-
 /* General Styling for the Navbar */
 .glass-navbar {
   position: sticky;
-  top: 0px;
-  margin: 0 auto; /* Center inside the parent container */
+  top: 0;
+  margin: 0 auto;
   width: 92vw;
-  /* max-width: 1200px; */
   color: #00ddff;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
@@ -14,8 +11,10 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   margin-bottom: 20px;
+  z-index: 1000;
 }
 
+/* Active Link */
 .active {
   background-color: #00ddff;
   color: black !important;
@@ -26,14 +25,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 40px;
+  padding: 10px 40px;
 }
 
 /* Brand Logo */
 .brand {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  /* text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8); */
   transition: all 0.3s ease;
 }
 
@@ -50,6 +48,7 @@
 .nav-links {
   display: flex;
   gap: 20px;
+  align-items: center;
 }
 
 .nav-links a {
@@ -66,10 +65,41 @@
   color: black;
 }
 
+/* Logout Button Styling */
+.logout-button {
+  font-size: 1.2rem;
+  color: white;
+  background: #d10000;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout-button:hover {
+  background: #ff0000;
+  color: black;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .nav-links {
     display: none; /* Hide nav links on smaller screens */
   }
+}
+
+.nav-links a,
+.nav-links .active {
+  font-size: 1.5rem;
+  color: #00ddff;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.nav-links .active {
+  background-color: #00ddff;
+  color: black;
 }

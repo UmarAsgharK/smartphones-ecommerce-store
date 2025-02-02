@@ -1,45 +1,146 @@
 import React from "react";
 import { NavLink, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import Logout from "./Logout";
 import "./GlassmorphicNavbar.css";
 
 const GlassmorphicNavbar = () => {
+    const { user } = useAuth(); // Get user from AuthContext
+
     return (
         <nav className="glass-navbar">
             <div className="navbar-container">
                 {/* Brand Logo */}
                 <h1 className="brand">
-                    <Link to="/" end>
-                        Vendora
-                    </Link>
+                    <Link to="/">Vendora</Link>
                 </h1>
 
                 {/* Navigation Links */}
                 <div className="nav-links">
                     <NavLink
                         to="/"
-                        end
-                    // className={({ isActive }) => (isActive ? "active-link" : "")}
+                        className={({ isActive }) => (isActive ? "active" : "")}
                     >
                         Home
                     </NavLink>
                     <NavLink
                         to="/products"
-                    // className={({ isActive }) => (isActive ? "active-link" : "")}
+                        className={({ isActive }) => (isActive ? "active" : "")}
                     >
                         View Products
                     </NavLink>
-                    <NavLink
-                        to="/login"
-                    // className={({ isActive }) => (isActive ? "active-link" : "")}
-                    >
-                        Login
-                    </NavLink>
-                    <NavLink
-                        to="/register"
-                    // className={({ isActive }) => (isActive ? "active-link" : "")}
-                    >
-                        Register
-                    </NavLink>
+
+                    {user ? (
+                        <>
+                            {/* Buyer Links */}
+                            {user.role === "buyer" && (
+                                <>
+                                    <NavLink
+                                        to="/buyer/cart"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Cart
+                                    </NavLink>
+                                    <NavLink
+                                        to="/buyer/checkout"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Checkout
+                                    </NavLink>
+                                    <NavLink
+                                        to="/buyer/payment"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Payment
+                                    </NavLink>
+                                    <NavLink
+                                        to="/buyer/orders"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Orders
+                                    </NavLink>
+                                    <NavLink
+                                        to="/buyer/wishlist"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Wishlist
+                                    </NavLink>
+                                    <NavLink
+                                        to="/buyer/profile"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Profile
+                                    </NavLink>
+                                </>
+                            )}
+
+                            {/* Seller Links */}
+                            {user.role === "seller" && (
+                                <>
+                                    <NavLink
+                                        to="/seller/add-product"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Add Product
+                                    </NavLink>
+                                    <NavLink
+                                        to="/seller/products"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        My Products
+                                    </NavLink>
+                                    <NavLink
+                                        to="/seller/orders"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Seller Orders
+                                    </NavLink>
+                                </>
+                            )}
+
+                            {/* Admin Links */}
+                            {user.role === "admin" && (
+                                <>
+                                    <NavLink
+                                        to="/admin/dashboard"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Dashboard
+                                    </NavLink>
+                                    <NavLink
+                                        to="/admin/users"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Users
+                                    </NavLink>
+                                    <NavLink
+                                        to="/admin/products"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Products
+                                    </NavLink>
+                                    <NavLink
+                                        to="/admin/orders"
+                                        className={({ isActive }) => (isActive ? "active" : "")}
+                                    >
+                                        Orders
+                                    </NavLink>
+                                </>
+                            )}
+
+                            {/* Logout Link (shown for all logged in users) */}
+                            <Logout />
+                        </>
+                    ) : (
+                        <>
+                            <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>
+                                Login
+                            </NavLink>
+                            <NavLink to="/register" className={({ isActive }) => (isActive ? "active" : "")}>
+                                Register
+                            </NavLink>
+                        </>
+                    )}
                 </div>
             </div>
         </nav>

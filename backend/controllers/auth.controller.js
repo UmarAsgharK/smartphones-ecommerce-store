@@ -35,7 +35,6 @@ const setCookies = (res, accessToken, refreshToken) => {
 export const register = async (req, res) => {
     const { name, email, password, whatsappNumber, role } = req.body; // Get data from the request
     try {
-        console.log("Here")
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         console.log(existingUser);
@@ -45,10 +44,8 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        console.log("Here2")
         const newUser = new User({ name, email, password, whatsappNumber, role }); // Create a new user
         await newUser.save(); // Save the user to the database
-        console.log("Here3")
 
         const { accessToken, refreshToken } = generateTokens(newUser._id)
         await storeRefreshToken(newUser._id, refreshToken)

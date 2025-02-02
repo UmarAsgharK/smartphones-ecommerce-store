@@ -1,23 +1,23 @@
+// src/components/ProtectedRoute.jsx
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
-/**
- * A protected route that redirects to the login page if the user is not
- * logged in or does not have the required role.
- *
- * @param {string} role - The required role for the route.
- * @returns {React.ReactElement} - A React element to be rendered if the user
- * is authenticated and has the required role. Otherwise, a redirect to the
- * login page.
- */
-const ProtectedRoute = ({ role }) => {
-    // const { user } = useAuth();
-    const user = true;
+const ProtectedRoute = ({ allowedRoles }) => {
+    const { user } = useAuth();
 
-    if (!user || user.role !== role) {
-        return <Navigate to="/login" replace />;
+    // If there is no logged in user, redirect to login.
+    if (!user) return <Navigate to="/login" replace />;
+
+    // Check if allowedRoles is an array and if the user's role is one of them.
+    if (!allowedRoles.includes(user.role)) {
+        // Optionally, you could redirect to a "Not Authorized" page.
+        console.log(user.role);
+
+        return <Navigate to="/" replace />;
     }
 
+    // If everything is okay, render the nested routes.
     return <Outlet />;
 };
 

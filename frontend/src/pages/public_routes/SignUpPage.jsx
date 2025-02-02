@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import "./signup.css"
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import "./signup.css";
 
 const RegisterForm = () => {
     const [formData, setFormData] = useState({
@@ -10,10 +12,18 @@ const RegisterForm = () => {
         repeatPassword: "",
         role: "buyer", // Default role
     });
-
     const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    // Redirect if user is already logged in
+    useEffect(() => {
+        if (user) {
+            navigate("/");
+        }
+    }, [user, navigate]);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -39,6 +49,7 @@ const RegisterForm = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
@@ -49,7 +60,7 @@ const RegisterForm = () => {
             });
 
             const data = await response.json();
-            console.log(data)
+            // console.log(data)
 
             if (!response.ok) {
                 throw new Error(data.message || "Something went wrong");
@@ -64,6 +75,7 @@ const RegisterForm = () => {
                 repeatPassword: "",
                 role: "buyer",
             });
+            navigate("/login");
         } catch (err) {
             setError(err.message);
         }
@@ -75,69 +87,59 @@ const RegisterForm = () => {
             {error && <p style={{ color: "red" }}>{error}</p>}
             {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
             <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Username"
+                    required
+                />
                 <br />
 
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Email"
+                    required
+                />
                 <br />
 
-                <label>
-                    WhatsApp Number:
-                    <input
-                        type="tel"
-                        name="whatsappNumber"
-                        value={formData.whatsappNumber}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <input
+                    type="tel"
+                    name="whatsappNumber"
+                    value={formData.whatsappNumber}
+                    onChange={handleChange}
+                    placeholder="WhatsApp Number"
+                    required
+                />
                 <br />
 
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Password"
+                    required
+                />
                 <br />
 
-                <label>
-                    Repeat Password:
-                    <input
-                        type="password"
-                        name="repeatPassword"
-                        value={formData.repeatPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
+                <input
+                    type="password"
+                    name="repeatPassword"
+                    value={formData.repeatPassword}
+                    onChange={handleChange}
+                    placeholder="Repeat Password"
+                    required
+                />
                 <br />
 
                 <label>
                     Role:
-                    <select name="role" value={formData.role} onChange={handleChange}>
+                    <select name="role" value={formData.role} onChange={handleChange} required>
                         <option value="buyer">Buyer</option>
                         <option value="seller">Seller</option>
                     </select>
@@ -146,7 +148,7 @@ const RegisterForm = () => {
 
                 <button type="submit">Register</button>
             </form>
-        </div>
+        </div >
     );
 };
 
