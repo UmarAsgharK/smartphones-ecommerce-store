@@ -108,6 +108,13 @@ const productSchema = new mongoose.Schema(
                 },
                 message: "You can upload up to 5 images",
             },
+            default: [
+                'https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654390/phone_images/tkucatvpmmaprpqjqtdu.jpg',
+                'https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654392/phone_images/xyeqym6waj0vlu5uzu0m.jpg',
+                'https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654396/phone_images/dhsvhyqyfvnwxiupjqgu.jpg',
+                'https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654400/phone_images/wq1l2ikpaqrjv7vacsdz.jpg',
+                'https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654402/phone_images/vqy0zy3eb6qvy2weziwt.jpg'
+            ]
         },
         status: {
             type: String,
