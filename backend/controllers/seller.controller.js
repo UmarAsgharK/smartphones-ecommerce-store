@@ -1,6 +1,6 @@
 import Product from "../models/product.model.js";
 import Order from "../models/order.model.js";
-
+import cloudinary from "../config/cloudinary.js";
 // 1. Get All Products by Seller
 export const getSellerProducts = async (req, res) => {
     try {
@@ -18,29 +18,35 @@ export const getSellerProducts = async (req, res) => {
 
 // 2. Create a New Product
 export const createProduct = async (req, res) => {
-    console.log(req.user.id);
+    // Assuming req.user is set by your authentication middleware.
+    console.log("Seller ID:", req.user.id);
+    console.log("Request Body:", req.body);
 
     try {
-        const {
-            name,
-            brand,
-            price,
-            description,
-            specifications,
-            stock,
-            images,
-        } = req.body;
+        // Destructure the expected fields from req.body.
+        const { name, brand, price, description, specifications, stock } = req.body;
+
+        // Parse specifications if it's sent as a JSON string.
+        let specs;
+        try {
+            specs = typeof specifications === "string" ? JSON.parse(specifications) : specifications;
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid specifications format",
+            });
+        }
 
         // Ensure all required fields are provided
         if (
             !name ||
             !brand ||
             !price ||
-            !specifications ||
-            !specifications.screenSize ||
-            !specifications.ram ||
-            !specifications.storage ||
-            !specifications.os ||
+            !specs ||
+            !specs.screenSize ||
+            !specs.ram ||
+            !specs.storage ||
+            !specs.os ||
             !stock
         ) {
             return res.status(400).json({
@@ -49,32 +55,48 @@ export const createProduct = async (req, res) => {
             });
         }
 
+        // Create an empty array to store the secure URLs from Cloudinary
+        let imageUrls = [];
 
-        // Create a new product document
+        // Multer (with your upload middleware) will attach an array of files to req.files.
+        if (req.files && req.files.length > 0) {
+            // Loop over each file and upload it to Cloudinary.
+            // (If you're using multer-storage-cloudinary, you might already have secure URLs in file.path.)
+            for (const file of req.files) {
+                const result = await cloudinary.uploader.upload(file.path, {
+                    folder: "phone_images", // Change to your desired folder
+                });
+                imageUrls.push(result.secure_url);
+            }
+        }
+
+        // Create a new product document.
         const product = new Product({
             name,
             brand,
             price,
             description,
-            specifications,
+            specifications: specs, // Use the parsed specifications object
             stock,
-            images,
-            seller: req.user.id, // Set the seller as the authenticated user
+            images: imageUrls, // Save the array of Cloudinary secure URLs
+            seller: req.user.id, // Associate the product with the authenticated user
         });
+
+        console.log("Product to save:", product);
 
         // Save the product to the database
         const savedProduct = await product.save();
-        res.status(201).json({
+
+        return res.status(201).json({
             success: true,
             message: "Product created successfully",
             product: savedProduct,
         });
     } catch (error) {
-        // console.log(product);
-
-        res.status(500).json({
+        console.error("Error creating product:", error);
+        return res.status(500).json({
             success: false,
-            message: "Failed to create product",
+            message: "Failed to create product: " + error.message,
             error: error.message,
         });
     }

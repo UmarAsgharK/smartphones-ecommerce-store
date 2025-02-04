@@ -1,5 +1,6 @@
 import express from "express";
 import { authenticate, authorizeRoles } from "../middlewares/auth.middleware.js";
+import upload from "../middlewares/uploads.js"
 import {
     getSellerProducts,
     createProduct,
@@ -27,7 +28,7 @@ router.get(
 router
     .route("/products")
     .get(getSellerProducts) // View all products added by the seller
-    .post(createProduct);  // Add a new product
+    .post(upload.array("images", 5), createProduct);  // Add a new product
 
 router
     .route("/products/:productId")

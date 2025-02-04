@@ -16,10 +16,13 @@ const AddProduct = () => {
         os: "",
         networkSupport: [],
         stock: "",
-        images: [],
+        images: [], // This will be an array of File objects
     });
 
     const [previewImages, setPreviewImages] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,28 +55,91 @@ const AddProduct = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Product Data Submitted:", productData);
+        setLoading(true);
+        setError("");
+        setSuccessMessage("");
 
-        // Reset the form fields after submission
-        setProductData({
-            name: "",
-            brand: "",
-            price: "",
-            description: "",
-            screenSize: "",
-            ram: "",
-            storage: "",
-            camera: "",
-            battery: "",
-            processor: "",
-            os: "",
-            networkSupport: [],
-            stock: "",
-            images: [],
-        });
-        setPreviewImages([]);
+        try {
+            // Create a FormData object
+            const formData = new FormData();
+
+            // Append top-level fields
+            formData.append("name", productData.name);
+            formData.append("brand", productData.brand);
+            formData.append("price", productData.price);
+            formData.append("description", productData.description);
+            formData.append("stock", productData.stock);
+
+            // Append specification fields (you can either flatten these fields, or send as JSON string)
+            // Option 1: Flatten the specification fields:
+            // Create the specifications object and append it as a JSON string
+            const specifications = {
+                screenSize: productData.screenSize,
+                ram: productData.ram,
+                storage: productData.storage,
+                camera: productData.camera,
+                battery: productData.battery,
+                processor: productData.processor,
+                os: productData.os,
+                networkSupport: productData.networkSupport, // include if needed
+            };
+            formData.append("specifications", JSON.stringify(specifications));
+
+
+            // For array fields such as networkSupport, you can append each value individually.
+            productData.networkSupport.forEach((network) => {
+                // You can use the key "networkSupport[]" if your backend expects an array
+                formData.append("networkSupport[]", network);
+            });
+
+            // Append each image file.
+            // If your backend expects an array, you can name it "images[]" or simply "images" depending on your server-side parser.
+            productData.images.forEach((file) => {
+                formData.append("images", file);
+            });
+
+            // Send the API request to the backend using fetch.
+            // Note: Do not manually set the Content-Type header when sending FormData.
+            const response = await fetch("http://localhost:5000/api/seller/products", {
+                method: "POST",
+                credentials: "include", // Ensures cookies (JWT/session) are sent
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to create product");
+            }
+
+            setSuccessMessage(data.message || "Product created successfully!");
+
+            // Reset the form fields after successful submission
+            setProductData({
+                name: "",
+                brand: "",
+                price: "",
+                description: "",
+                screenSize: "",
+                ram: "",
+                storage: "",
+                camera: "",
+                battery: "",
+                processor: "",
+                os: "",
+                networkSupport: [],
+                stock: "",
+                images: [],
+            });
+            setPreviewImages([]);
+        } catch (err) {
+            console.error(err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -97,6 +163,21 @@ const AddProduct = () => {
                         <option value="OnePlus">OnePlus</option>
                         <option value="Google">Google</option>
                         <option value="Huawei">Huawei</option>
+                        <option value="Sony">Sony</option>
+                        <option value="LG">LG</option>
+                        <option value="Motorola">Motorola</option>
+                        <option value="Nokia">Nokia</option>
+                        <option value="Realme">Realme</option>
+                        <option value="Tecno">Tecno</option>
+                        <option value="Infinix">Infinix</option>
+                        <option value="Honor">Honor</option>
+                        <option value="ZTE">ZTE</option>
+                        <option value="Asus">Asus</option>
+                        <option value="HTC">HTC</option>
+                        <option value="BlackBerry">BlackBerry</option>
+                        <option value="Nothing">Nothing</option>
+                        <option value="Fairphone">Fairphone</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
 
@@ -182,7 +263,11 @@ const AddProduct = () => {
                     </div>
                 </div>
 
-                <button type="submit" className="submit-button">Add Product</button>
+                {error && <p className="error-message">{error}</p>}
+                {successMessage && <p className="success-message">{successMessage}</p>}
+                <button type="submit" className="submit-button" disabled={loading}>
+                    {loading ? "Adding Product..." : "Add Product"}
+                </button>
             </form>
         </div>
     );

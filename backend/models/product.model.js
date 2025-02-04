@@ -59,6 +59,21 @@ const productSchema = new mongoose.Schema(
                 "OnePlus",
                 "Google",
                 "Huawei",
+                "Sony",
+                "LG",
+                "Motorola",
+                "Nokia",
+                "Realme",
+                "Tecno",
+                "Infinix",
+                "Honor",
+                "ZTE",
+                "Asus",
+                "HTC",
+                "BlackBerry", // For historical completeness
+                "Nothing",
+                "Fairphone", // Example of a niche brand
+                "Other",
             ],
         },
         price: {

@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser"
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 // Import routes
 import authRoutes from "./routes/auth.route.js";
@@ -12,14 +14,20 @@ import produtRoutes from "./routes/product.route.js";
 import buyerRoutes from "./routes/buyer.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 // Initialize environment variables and database
 dotenv.config();
 connectDB();
 
 const app = express();
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 const corsOptions = {
   origin: 'http://localhost:5173', // Frontend URL (Adjust this if you're using a different port)
