@@ -103,29 +103,29 @@ export const refreshTheAccessToken = async (req, res) => {
     try {
         const refresh_token = req.cookies.refreshToken;
         if (!refresh_token) {
-            return res.status(401).json({ message: "No refresh token provided" })
+            return res.status(401).json({ message: "No refresh token provided" });
         }
 
-        const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET)
-        const storedToken = await redis.get(`refresh_token:${decoded.userId}`)
+        const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET);
+        const storedToken = await redis.get(`refresh_token:${decoded.userId}`);
 
-        console.log(refresh_token, "\n", storedToken);
-        if (storedToken === refresh_token) {
-            console.log(refresh_token, "\n", storedToken);
-            // return res.status(401).json({ message: "Invalid Refresh Token" })
+        if (storedToken !== refresh_token) {
+            return res.status(401).json({ message: "Invalid Refresh Token" });
         }
 
-        const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" })
+        const accessToken = jwt.sign({ userId: decoded.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 
         res.cookie("accessToken", accessToken, {
-            httpOnly: true, // Prevent XSS attacks
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict", // Prevent CSRF attacks,
-            maxAge: 15 * 60 * 1000
-        })
+            sameSite: "strict",
+            maxAge: 15 * 60 * 1000,
+        });
 
-        res.json({ message: "Token Refresh Successfully" })
+        // Fetch the user and return it
+        const user = await User.findById(decoded.userId).select("-password");
+        res.json({ user });
     } catch (err) {
-
+        res.status(500).json({ error: err.message });
     }
-}
+};

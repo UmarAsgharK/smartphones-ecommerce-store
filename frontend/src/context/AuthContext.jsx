@@ -1,5 +1,5 @@
-// Updated AuthContext with global loading state
-import React, { createContext, useContext, useState } from "react";
+// Updated AuthContext with token validation on app load
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { loginUserAPI, logoutUserAPI } from "../services/authService";
 
 const AuthContext = createContext();
@@ -8,26 +8,58 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false); // Global loading state
+    const [loading, setLoading] = useState(true); // Set initial loading to true
 
-    const login = async (email, password) => {
-        setLoading(true); // Set loading to true during login
+    // Function to validate tokens and reinitialize user state
+    const validateToken = async () => {
+        setLoading(true);
         try {
-            const response = await loginUserAPI(email, password);
-            setUser(response.user);
-            // Save to localStorage and navigate as needed
+            const response = await fetch("http://localhost:5000/api/auth/refresh-token", {
+                method: "POST",
+                credentials: "include", // Include cookies
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUser(data.user); // Reinitialize user state
+            } else {
+                setUser(null); // No valid token, user is not logged in
+            }
         } catch (error) {
-            throw new Error(error.message || "Login failed");
+            console.error("Token validation failed:", error);
+            setUser(null); // Handle error
         } finally {
-            setLoading(false); // Set loading to false after login completes
+            setLoading(false); // Set loading to false after validation
         }
     };
 
-    const logout = () => {
-        setLoading(true); // Set loading to true during logout
-        // Handle logout logic here
-        setUser(null);
-        setLoading(false); // Set loading to false after logout completes
+    // Validate token on app load
+    useEffect(() => {
+        validateToken();
+    }, []);
+
+    const login = async (email, password) => {
+        setLoading(true);
+        try {
+            const response = await loginUserAPI(email, password);
+            setUser(response.user);
+        } catch (error) {
+            throw new Error(error.message || "Login failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const logout = async () => {
+        setLoading(true);
+        try {
+            await logoutUserAPI();
+            setUser(null);
+        } catch (error) {
+            console.error("Logout failed:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
