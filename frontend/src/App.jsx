@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
 // Public Pages
-import Home from "./pages/public_routes/HomePage";
+// import Home from "./pages/public_routes/HomePage";
 import Register from "./pages/public_routes/SignUpPage";
 import Login from "./pages/public_routes/LoginPage";
 import ProductPage from "./pages/public_routes/ProductsPage";
@@ -13,8 +13,6 @@ import Cart from "./pages/buyer/Cart";
 import Checkout from "./pages/buyer/Checkout";
 import Payment from "./pages/buyer/Payment";
 import Orders from "./pages/buyer/Orders";
-import Wishlist from "./pages/buyer/Wishlist";
-import Profile from "./pages/buyer/Profile";
 
 // Seller Pages
 import AddProductForm from "./pages/seller/AddProductForm";
@@ -25,8 +23,6 @@ import SellerOrders from "./pages/seller/SellerOrders";
 // Admin Pages
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminUsers from "./pages/admin/Users";
-import AdminProducts from "./pages/admin/Products";
-import AdminOrders from "./pages/admin/Orders";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -38,14 +34,14 @@ function App() {
   return (
     <>
       <Navbar />
-      <h1>😀😁😂How are you doing🤣😃😄</h1>
+      {/* <h1>😀😁😂How are you doing🤣😃😄</h1> */}
       <div className="main-container">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<ProductPage />} />
-          <Route path="/products/:productId" element={<ProductDetails />} />
-
+          <Route path="/" element={<ProductPage />} />
+          <Route path="/details" element={<ProductDetails />} />
+          {/* <Route path="/products/:productId" element={<ProductDetails />} /> */}
+          {/*  */}
           {/* Wrap public pages that should not be accessible once logged in */}
           <Route
             path="/register"
@@ -75,8 +71,6 @@ function App() {
               <Route path="checkout" element={<Checkout />} />
               <Route path="payment" element={<Payment />} />
               <Route path="orders" element={<Orders />} />
-              <Route path="wishlist" element={<Wishlist />} />
-              <Route path="profile" element={<Profile />} />
             </Route>
           </Route>
 
@@ -95,8 +89,6 @@ function App() {
             <Route path="/admin">
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="users" element={<AdminUsers />} />
-              <Route path="products" element={<AdminProducts />} />
-              <Route path="orders" element={<AdminOrders />} />
             </Route>
           </Route>
         </Routes>

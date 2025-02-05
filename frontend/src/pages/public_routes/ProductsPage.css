@@ -1,0 +1,151 @@
+/* ------------------ General Layout ------------------ */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Updated Search Bar Styles */
+.search-bar {
+  display: flex;
+  justify-content: center; /* centers the search bar horizontally */
+  margin-bottom: 20px;
+}
+
+.search-bar input[type="text"] {
+  width: 70%; /* adjust the percentage as needed for your design */
+  padding: 10px;
+  font-size: 16px;
+  /* border: 1px solid #ccc; */
+  border: 2px solid #585858;
+  border-radius: 9px; /* Rounded corners */
+}
+
+
+
+.search-button {
+  padding: 10px 15px; /* smaller search button */
+  position: relative;
+  border-radius: 10px;
+  bottom: 10px;
+  height: 54px;
+  right: 80px;
+  border: none;
+  width: 100px;
+  /* height: 50px; */
+  background-color: #0aacc5;
+  color: black;
+  font-size: 19px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+
+.search-button:hover {
+  background-color: #005fa3;
+}
+
+
+/* Layout for Sidebar + Main Content */
+.content-area {
+  display: flex;
+}
+
+/* Sidebar styles for the filter area */
+.sidebar {
+  width: 300px;
+  
+  margin-right: 20px;
+  border: 2px solid #585858;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: rgba(45, 45, 45, 0.823);
+  color: white;
+}
+
+.sidebar h2 {
+  margin-top: 0 ;
+  margin-bottom: 35px;
+  color: #0aacc5;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+  /* text-align: center; */
+}
+
+.filter-group label,
+.filter-group p {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.filter-group input[type="text"],
+.filter-group input[type="number"] {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.checkbox-group {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.checkbox-group input {
+  margin-right: 8px;
+}
+
+.filter-group p {
+  /* margin-right: 8px; */
+  color: white;
+}
+
+/* Apply button for filters */
+.apply-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.apply-button:hover {
+  background-color: #005fa3;
+}
+
+/* Updated Sidebar Filter Alignment */
+.sidebar .filter-group {
+  margin-bottom: 15px;  /* reduced margin for tighter grouping */
+}
+
+.sidebar .checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;  /* tighter spacing between checkboxes */
+}
+
+.sidebar .checkbox-group input {
+  margin-right: 8px;
+}
+
+
+/* Main content area for displaying products */
+.main-content {
+  flex: 1;
+}
+
+.main-content h1 {
+  margin-top: 0;
+}

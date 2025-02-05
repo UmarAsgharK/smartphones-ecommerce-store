@@ -21,26 +21,20 @@ const GlassmorphicNavbar = () => {
                         to="/"
                         className={({ isActive }) => (isActive ? "active" : "")}
                     >
-                        Home
-                    </NavLink>
-                    <NavLink
-                        to="/products"
-                        className={({ isActive }) => (isActive ? "active" : "")}
-                    >
-                        View Products
+                        Products
                     </NavLink>
 
+                    <NavLink
+                        to="/details"
+                        className={({ isActive }) => (isActive ? "active" : "")}
+                    >
+                        Details
+                    </NavLink>
                     {user ? (
                         <>
                             {/* Buyer Links */}
                             {user.role === "buyer" && (
                                 <>
-                                    <NavLink
-                                        to="/buyer/cart"
-                                        className={({ isActive }) => (isActive ? "active" : "")}
-                                    >
-                                        Cart
-                                    </NavLink>
                                     <NavLink
                                         to="/buyer/checkout"
                                         className={({ isActive }) => (isActive ? "active" : "")}
@@ -60,16 +54,10 @@ const GlassmorphicNavbar = () => {
                                         Orders
                                     </NavLink>
                                     <NavLink
-                                        to="/buyer/wishlist"
+                                        to="/buyer/cart"
                                         className={({ isActive }) => (isActive ? "active" : "")}
                                     >
-                                        Wishlist
-                                    </NavLink>
-                                    <NavLink
-                                        to="/buyer/profile"
-                                        className={({ isActive }) => (isActive ? "active" : "")}
-                                    >
-                                        Profile
+                                        Cart
                                     </NavLink>
                                 </>
                             )}
@@ -93,7 +81,7 @@ const GlassmorphicNavbar = () => {
                                         to="/seller/orders"
                                         className={({ isActive }) => (isActive ? "active" : "")}
                                     >
-                                        Seller Orders
+                                        Recieved Orders
                                     </NavLink>
                                 </>
                             )}
@@ -112,18 +100,6 @@ const GlassmorphicNavbar = () => {
                                         className={({ isActive }) => (isActive ? "active" : "")}
                                     >
                                         Users
-                                    </NavLink>
-                                    <NavLink
-                                        to="/admin/products"
-                                        className={({ isActive }) => (isActive ? "active" : "")}
-                                    >
-                                        Products
-                                    </NavLink>
-                                    <NavLink
-                                        to="/admin/orders"
-                                        className={({ isActive }) => (isActive ? "active" : "")}
-                                    >
-                                        Orders
                                     </NavLink>
                                 </>
                             )}

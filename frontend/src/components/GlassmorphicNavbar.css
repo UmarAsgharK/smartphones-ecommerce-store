@@ -5,9 +5,9 @@
   margin: 0 auto;
   width: 92vw;
   color: #00ddff;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  background: rgba(62, 62, 62, 0.499);
+  backdrop-filter: blur(35px);
+  box-shadow: 0 8px 32px rgba(113, 113, 113, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   margin-bottom: 20px;

@@ -4,13 +4,13 @@ import User from "../models/user.model.js"
 // Get all users
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find().select("-password"); // Exclude passwords
+        // Fetch all users whose role is not "admin"
+        const users = await User.find({ role: { $ne: "admin" } }).select("-password"); // Exclude passwords
         res.status(200).json(users);
     } catch (err) {
         res.status(500).json({ error: `Server error: ${err.message}` });
     }
 };
-
 
 // Delete a user
 export const deleteUser = async (req, res) => {
