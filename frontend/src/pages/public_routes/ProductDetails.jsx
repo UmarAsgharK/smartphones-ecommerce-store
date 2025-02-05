@@ -4,7 +4,6 @@ import image2 from '../../assets/vojtech-bruzek-GaDzER4qyto-unsplash.jpg';
 import image3 from '../../assets/thom-bradley-1NZcjdo2hKQ-unsplash.jpg';
 import image4 from '../../assets/shiwa-id-Uae7ouMw91A-unsplash.jpg';
 import image5 from '../../assets/rodion-kutsaiev-0VGG7cqTwCo-unsplash.jpg';
-import { Link } from "react-router-dom";
 import './ProductDetails.css';
 
 const ProductDetails = () => {
@@ -42,9 +41,62 @@ const ProductDetails = () => {
     const [mainImage, setMainImage] = useState(product.images[0]);
 
     return (
-        <h1>Details Page</h1>
-    );
+        <div className="product-details-container">
+            {/* Product Images Section */}
+            <div className="image-section">
+                <img src={mainImage} alt="Product" className="main-image" />
+                <div className="thumbnail-gallery">
+                    {product.images.map((image, index) => (
+                        <img
+                            key={index}
+                            src={image}
+                            alt={`Thumbnail ${index}`}
+                            className={`thumbnail ${image === mainImage ? "active-thumbnail" : ""}`}
+                            onClick={() => setMainImage(image)}
+                        />
+                    ))}
+                </div>
+            </div>
 
+            {/* Product Details Section */}
+            <div className="details-section">
+                <h1 className="product-title">{product.title}</h1>
+                <p className="product-price">${product.price.toFixed(2)}</p>
+                <p className="product-rating">Rating: ⭐ {product.rating} / 5</p>
+                <p className="product-description">{product.description}</p>
+                <button className="buy-now-button">Buy Now</button>
+            </div>
+
+            <div className="additional-info">
+                {/* Specifications Table */}
+                <div className="specifications-section">
+                    <h2>Specifications</h2>
+                    <table className="specifications-table">
+                        <tbody>
+                            {Object.entries(product.specifications).map(([key, value], index) => (
+                                <tr key={index}>
+                                    <td className="spec-key">{key.replace(/([A-Z])/g, ' $1')}</td>
+                                    <td className="spec-value">{value}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Reviews Section */}
+                <div className="reviews-section">
+                    <h2>Customer Reviews</h2>
+                    {product.reviews.map((review, index) => (
+                        <div key={index} className="review">
+                            <h3>{review.user}</h3>
+                            <p>Rating: ⭐ {review.rating}</p>
+                            <p>{review.comment}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default ProductDetails;

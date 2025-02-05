@@ -39,8 +39,8 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<ProductPage />} />
-          <Route path="/details" element={<ProductDetails />} />
-          {/* <Route path="/products/:productId" element={<ProductDetails />} /> */}
+          {/* <Route path="/details" element={<ProductDetails />} /> */}
+          <Route path="/products/:productId" element={<ProductDetails />} />
           {/*  */}
           {/* Wrap public pages that should not be accessible once logged in */}
           <Route
