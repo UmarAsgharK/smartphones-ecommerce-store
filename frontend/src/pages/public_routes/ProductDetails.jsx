@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import image1 from '../../assets/daniel-korpai-aUmq85-2V7I-unsplash.jpg';
-import image2 from '../../assets/vojtech-bruzek-GaDzER4qyto-unsplash.jpg';
-import image3 from '../../assets/thom-bradley-1NZcjdo2hKQ-unsplash.jpg';
-import image4 from '../../assets/shiwa-id-Uae7ouMw91A-unsplash.jpg';
-import image5 from '../../assets/rodion-kutsaiev-0VGG7cqTwCo-unsplash.jpg';
+import image1 from '../../assets/daniel-korpai-aUmq85-2V7I-unsplash.webp';
+import image2 from '../../assets/omid-armin-B2w4rdIihEo-unsplash.webp';
+import image3 from '../../assets/amir-hanna-sweUF7FcyP4-unsplash.webp';
+import image4 from '../../assets/paolo-giubilato-ZwKCWVFdrcs-unsplash.webp';
+import image5 from '../../assets/shiwa-id-Uae7ouMw91A-unsplash.webp';
 import './ProductDetails.css';
 
 const ProductDetails = () => {
@@ -27,14 +27,7 @@ const ProductDetails = () => {
             { user: "John", comment: "Fantastic product!", rating: 5 },
             { user: "Sarah", comment: "Good value for money.", rating: 4 },
             { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
-            { user: "Alex", comment: "The camera is exceptional.", rating: 5 },
+            // ... more reviews if needed
         ],
     };
 
@@ -42,33 +35,37 @@ const ProductDetails = () => {
 
     return (
         <div className="product-details-container">
-            {/* Product Images Section */}
-            <div className="image-section">
-                <img src={mainImage} alt="Product" className="main-image" />
-                <div className="thumbnail-gallery">
-                    {product.images.map((image, index) => (
-                        <img
-                            key={index}
-                            src={image}
-                            alt={`Thumbnail ${index}`}
-                            className={`thumbnail ${image === mainImage ? "active-thumbnail" : ""}`}
-                            onClick={() => setMainImage(image)}
-                        />
-                    ))}
+            {/* Row 1: Images & Product Details */}
+            <div className="row first-row">
+                {/* Product Images Section */}
+                <div className="image-section">
+                    <img src={mainImage} alt="Product" className="main-image" />
+                    <div className="thumbnail-gallery">
+                        {product.images.map((image, index) => (
+                            <img
+                                key={index}
+                                src={image}
+                                alt={`Thumbnail ${index}`}
+                                className={`thumbnail ${image === mainImage ? "active-thumbnail" : ""}`}
+                                onClick={() => setMainImage(image)}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Product Details Section */}
+                <div className="details-section">
+                    <h1 className="product-title">{product.title}</h1>
+                    <p className="product-price">${product.price.toFixed(2)}</p>
+                    <p className="product-ratings">Rating: ⭐ {product.rating} / 5</p>
+                    <p className="product-description">{product.description}</p>
+                    <button className="buy-now-button">Buy Now</button>
                 </div>
             </div>
 
-            {/* Product Details Section */}
-            <div className="details-section">
-                <h1 className="product-title">{product.title}</h1>
-                <p className="product-price">${product.price.toFixed(2)}</p>
-                <p className="product-rating">Rating: ⭐ {product.rating} / 5</p>
-                <p className="product-description">{product.description}</p>
-                <button className="buy-now-button">Buy Now</button>
-            </div>
-
-            <div className="additional-info">
-                {/* Specifications Table */}
+            {/* Row 2: Specifications & Reviews */}
+            <div className="row second-row">
+                {/* Specifications Section */}
                 <div className="specifications-section">
                     <h2>Specifications</h2>
                     <table className="specifications-table">

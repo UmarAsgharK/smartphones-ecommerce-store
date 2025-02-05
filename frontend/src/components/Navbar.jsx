@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Logout from "./Logout";
-import "./GlassmorphicNavbar.css";
+import "./navbar.css";
 
 const GlassmorphicNavbar = () => {
     const { user } = useAuth(); // Get user from AuthContext
@@ -24,12 +24,7 @@ const GlassmorphicNavbar = () => {
                         Products
                     </NavLink>
 
-                    <NavLink
-                        to="/details"
-                        className={({ isActive }) => (isActive ? "active" : "")}
-                    >
-                        Details
-                    </NavLink>
+                    {/* Role BASED routes for user now in the navbar i.e admin, buyer and seller */}
                     {user ? (
                         <>
                             {/* Buyer Links */}

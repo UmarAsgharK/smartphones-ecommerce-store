@@ -13,38 +13,41 @@ const Product = ({
     rating,
 }) => {
     return (
-        <div className="product-card">
-            <div className="product-image-container">
-                <img
-                    src={imageUrl || "default-image.jpg"}
-                    alt={name || "Product image"}
-                    className="product-image"
-                />
-                <div className="product-rating">
-                    {rating ? rating.toFixed(1) : "N/A"} <span className="star-icon">★</span>
+        <Link to="/products/123">
+
+            <div className="product-card">
+                <div className="product-image-container">
+                    <img
+                        src={imageUrl || "default-image.jpg"}
+                        alt={name || "Product image"}
+                        className="product-image"
+                    />
+                    <div className="product-rating">
+                        {rating ? rating.toFixed(1) : "N/A"} <span className="star-icon">★</span>
+                    </div>
                 </div>
-            </div>
-            <div className="product-details">
-                <h2 className="product-title">{name || "Product Name"}</h2>
-                <p className="product-brand">{brand || "Brand Unknown"}</p>
-                <p className="product-price">
-                    {price ? `$${price}` : "Price Not Available"}
-                </p>
-                {/* You can uncomment the description if needed */}
-                {/* <p className="product-description">
+                <div className="product-details">
+                    <h2 className="product-title">{name || "Product Name"}</h2>
+                    <p className="product-brand">{brand || "Brand Unknown"}</p>
+                    <p className="product-price">
+                        {price ? `$${price}` : "Price Not Available"}
+                    </p>
+                    {/* You can uncomment the description if needed */}
+                    {/* <p className="product-description">
           {description || "No description available."}
         </p> */}
-                <div className="product-info-row">
-                    <p className="product-stock">Stock: {stock != null ? stock : "N/A"}</p>
-                    <button
-                        className="buy-button"
-                        aria-label={`View details for ${name || "this product"}`}
-                    >
-                        View Details
-                    </button>
+                    <div className="product-info-row">
+                        <p className="product-stock">Stock: {stock != null ? stock : "N/A"}</p>
+                        <button
+                            className="buy-button"
+                            aria-label={`View details for ${name || "this product"}`}
+                        >
+                            View Details
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };
 

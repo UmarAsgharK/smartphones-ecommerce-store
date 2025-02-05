@@ -4,7 +4,7 @@
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  /* gap: 5px; */
+  /* gap: 15px; */
 }
 
 /* Product Card */
@@ -15,8 +15,11 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
-  margin: 20px auto;
+  margin: 20px 10px;
   overflow: hidden;
+  /* padding-bottom: 20px; */
+  width: 280px;
+
 }
 
 .product-card:hover {
@@ -59,24 +62,26 @@
 .product-details {
   padding: 10px;
   text-align: left;
+  /* width: 250px; */
 }
 
 .product-title {
   font-size: 20px;
   margin: 5px 0;
+  height: 80px;
   color: #fff;
 }
 
 .product-brand {
   font-size: 16px;
   color: #fff;
-  margin: 5px 0;
+  margin-top: 15px;
 }
 
 .product-price {
   font-size: 18px;
   color: #fff;
-  margin: 5px 0;
+  margin: 10px 0;
 }
 
 .product-stock {
@@ -88,8 +93,10 @@
 /* Row for stock and view button */
 .product-info-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  /* width: 100px; */
+
 }
 
 /* Buy/View Details Button */

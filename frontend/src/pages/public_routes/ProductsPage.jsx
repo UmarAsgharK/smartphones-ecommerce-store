@@ -1,101 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Product from "../../components/Product";
 import "./ProductsPage.css";
 
-// Sample phone products (following your model structure)
-const sampleProducts = [
-    {
-        id: 1,
-        name: "iPhone SE",
-        brand: "Apple",
-        price: 399,
-        description: "A compact and affordable iPhone with a powerful chip.",
-        stock: 5,
-        rating: 3.9,
-        specifications: {
-            screenSize: 4.7,
-            ram: 3,
-            storage: 64,
-            camera: 12,
-            battery: 1821,
-            processor: "A13 Bionic",
-            os: "iOS",
-            networkSupport: ["4G", "WiFi"],
-        },
-        images: [
-            "https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654402/phone_images/vqy0zy3eb6qvy2weziwt.jpg",
-        ],
-    },
-    {
-        id: 2,
-        name: "iPhone 13",
-        brand: "Apple",
-        price: 999,
-        description: "The latest Apple iPhone with advanced features.",
-        stock: 10,
-        rating: 4.2,
-        specifications: {
-            screenSize: 6.1,
-            ram: 4,
-            storage: 128,
-            camera: 12,
-            battery: 3227,
-            processor: "A15 Bionic",
-            os: "iOS",
-            networkSupport: ["4G", "5G", "WiFi"],
-        },
-        images: [
-            "https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654390/phone_images/tkucatvpmmaprpqjqtdu.jpg",
-        ],
-    },
-    {
-        id: 3,
-        name: "Google Pixel 6",
-        brand: "Google",
-        price: 699,
-        description: "Google’s flagship with a clean Android experience.",
-        stock: 8,
-        rating: 3.8,
-        specifications: {
-            screenSize: 6.4,
-            ram: 8,
-            storage: 128,
-            camera: 50,
-            battery: 4614,
-            processor: "Google Tensor",
-            os: "Android",
-            networkSupport: ["4G", "5G", "WiFi"],
-        },
-        images: [
-            "https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654396/phone_images/dhsvhyqyfvnwxiupjqgu.jpg",
-        ],
-    },
-    {
-        id: 4,
-        name: "OnePlus 9",
-        brand: "OnePlus",
-        price: 729,
-        description: "Experience speed and smooth performance with OnePlus.",
-        stock: 20,
-        rating: 4.1,
-        specifications: {
-            screenSize: 6.55,
-            ram: 8,
-            storage: 128,
-            camera: 48,
-            battery: 4500,
-            processor: "Snapdragon 888",
-            os: "Android",
-            networkSupport: ["4G", "5G", "WiFi"],
-        },
-        images: [
-            "https://res.cloudinary.com/dfk54d5bj/image/upload/v1738654400/phone_images/wq1l2ikpaqrjv7vacsdz.jpg",
-        ],
-    },
-];
-
 // Filter options (adjust these lists as needed)
-// Replace your existing brandOptions definition with this:
 const brandOptions = [
     "Apple",
     "Samsung",
@@ -119,7 +26,7 @@ const brandOptions = [
     "BlackBerry",
     "Nothing",
     "Fairphone",
-    "Other"
+    "Other",
 ];
 
 const osOptions = ["Android", "iOS", "Windows"];
@@ -129,11 +36,14 @@ const batteryOptions = ["2000-3000", "3000-4000", "4000+"];
 const cameraOptions = ["12MP", "48MP", "50MP", "64MP"];
 
 const ProductsPage = () => {
-    // Search state (separate from filter sidebar)
+    // State for products coming from the backend
+    const [products, setProducts] = useState([]);
+
+    // State for search input
     const [searchTerm, setSearchTerm] = useState("");
     const [appliedSearch, setAppliedSearch] = useState("");
 
-    // Sidebar filter states
+    // State for filter sidebar (selections & applied filters)
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [selectedOS, setSelectedOS] = useState([]);
     const [selectedRAM, setSelectedRAM] = useState([]);
@@ -141,7 +51,6 @@ const ProductsPage = () => {
     const [selectedBattery, setSelectedBattery] = useState([]);
     const [selectedCamera, setSelectedCamera] = useState([]);
 
-    // Applied sidebar filters (applied on button click)
     const [appliedFilters, setAppliedFilters] = useState({
         brands: [],
         os: [],
@@ -151,12 +60,26 @@ const ProductsPage = () => {
         camera: [],
     });
 
-    // --- Handlers for Search ---
+    // Fetch products from the backend on component mount
+    useEffect(() => {
+        // Adjust the URL as necessary for your environment
+        fetch("http://localhost:5000/api/products")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => setProducts(data))
+            .catch((error) => console.error("Error fetching products:", error));
+    }, []);
+
+    // Handler for applying search
     const handleSearch = () => {
         setAppliedSearch(searchTerm);
     };
 
-    // --- Handlers for Sidebar Filters ---
+    // Toggle selection in the sidebar filters
     const toggleSelection = (option, selectedArray, setSelected) => {
         if (selectedArray.includes(option)) {
             setSelected(selectedArray.filter((o) => o !== option));
@@ -165,6 +88,7 @@ const ProductsPage = () => {
         }
     };
 
+    // Apply the filters from the sidebar
     const handleApplyFilters = () => {
         setAppliedFilters({
             brands: selectedBrands,
@@ -176,39 +100,51 @@ const ProductsPage = () => {
         });
     };
 
-    // --- Filtering Logic ---
-    const filteredProducts = sampleProducts.filter((product) => {
+    // Filtering logic
+    const filteredProducts = products.filter((product) => {
         let match = true;
-        // Check search term (if applied)
-        if (appliedSearch && !product.name.toLowerCase().includes(appliedSearch.toLowerCase())) {
+
+        // Apply search filter
+        if (
+            appliedSearch &&
+            !product.name.toLowerCase().includes(appliedSearch.toLowerCase())
+        ) {
             match = false;
         }
-        // Check Brand
-        if (appliedFilters.brands.length > 0 && !appliedFilters.brands.includes(product.brand)) {
+
+        // Filter by Brand
+        if (
+            appliedFilters.brands.length > 0 &&
+            !appliedFilters.brands.includes(product.brand)
+        ) {
             match = false;
         }
-        // Check Operating System
+
+        // Filter by Operating System
         if (
             appliedFilters.os.length > 0 &&
             !appliedFilters.os.includes(product.specifications.os)
         ) {
             match = false;
         }
-        // Check RAM (compare string, e.g., "4GB")
+
+        // Filter by RAM (string comparison e.g., "4GB")
         if (appliedFilters.ram.length > 0) {
             const ramStr = product.specifications.ram + "GB";
             if (!appliedFilters.ram.includes(ramStr)) {
                 match = false;
             }
         }
-        // Check Storage (compare string, e.g., "128GB")
+
+        // Filter by Storage (string comparison e.g., "128GB")
         if (appliedFilters.storage.length > 0) {
             const storageStr = product.specifications.storage + "GB";
             if (!appliedFilters.storage.includes(storageStr)) {
                 match = false;
             }
         }
-        // Check Battery (using ranges)
+
+        // Filter by Battery (using numeric ranges)
         if (appliedFilters.battery.length > 0) {
             const battery = product.specifications.battery;
             let batteryMatch = false;
@@ -225,28 +161,28 @@ const ProductsPage = () => {
                 match = false;
             }
         }
-        // Check Camera (compare string, e.g., "12MP")
+
+        // Filter by Camera (string comparison e.g., "12MP")
         if (appliedFilters.camera.length > 0) {
             const cameraStr = product.specifications.camera + "MP";
             if (!appliedFilters.camera.includes(cameraStr)) {
                 match = false;
             }
         }
+
         return match;
     });
 
     return (
         <div className="home-container">
-
-            <h1 style={{ color: "white" }}>Product Listings</h1>
-
+            <h1 className="page-title">Product Listings</h1>
             <div className="content-area">
-                {/* Sidebar with Filters */}
+                {/* Sidebar Filters */}
                 <aside className="sidebar">
                     <h2>Filters</h2>
 
                     {/* Brand Filter */}
-                    <div hidden className="filter-group">
+                    <div className="filter-group">
                         <p>Brand:</p>
                         {brandOptions.map((brand) => (
                             <div key={brand} className="checkbox-group">
@@ -268,13 +204,13 @@ const ProductsPage = () => {
                         <p>Operating System:</p>
                         {osOptions.map((os) => (
                             <div key={os} className="checkbox-group">
-                                <label htmlFor={`os-${os}`}>{os}</label>
                                 <input
                                     type="checkbox"
                                     id={`os-${os}`}
                                     checked={selectedOS.includes(os)}
                                     onChange={() => toggleSelection(os, selectedOS, setSelectedOS)}
                                 />
+                                <label htmlFor={`os-${os}`}>{os}</label>
                             </div>
                         ))}
                     </div>
@@ -284,13 +220,13 @@ const ProductsPage = () => {
                         <p>RAM:</p>
                         {ramOptions.map((ram) => (
                             <div key={ram} className="checkbox-group">
-                                <label htmlFor={`ram-${ram}`}>{ram}</label>
                                 <input
                                     type="checkbox"
                                     id={`ram-${ram}`}
                                     checked={selectedRAM.includes(ram)}
                                     onChange={() => toggleSelection(ram, selectedRAM, setSelectedRAM)}
                                 />
+                                <label htmlFor={`ram-${ram}`}>{ram}</label>
                             </div>
                         ))}
                     </div>
@@ -300,7 +236,6 @@ const ProductsPage = () => {
                         <p>Storage:</p>
                         {storageOptions.map((storage) => (
                             <div key={storage} className="checkbox-group">
-                                <label htmlFor={`storage-${storage}`}>{storage}</label>
                                 <input
                                     type="checkbox"
                                     id={`storage-${storage}`}
@@ -309,6 +244,7 @@ const ProductsPage = () => {
                                         toggleSelection(storage, selectedStorage, setSelectedStorage)
                                     }
                                 />
+                                <label htmlFor={`storage-${storage}`}>{storage}</label>
                             </div>
                         ))}
                     </div>
@@ -318,7 +254,6 @@ const ProductsPage = () => {
                         <p>Battery:</p>
                         {batteryOptions.map((range) => (
                             <div key={range} className="checkbox-group">
-                                <label htmlFor={`battery-${range}`}>{range}</label>
                                 <input
                                     type="checkbox"
                                     id={`battery-${range}`}
@@ -327,6 +262,7 @@ const ProductsPage = () => {
                                         toggleSelection(range, selectedBattery, setSelectedBattery)
                                     }
                                 />
+                                <label htmlFor={`battery-${range}`}>{range}</label>
                             </div>
                         ))}
                     </div>
@@ -336,7 +272,6 @@ const ProductsPage = () => {
                         <p>Camera:</p>
                         {cameraOptions.map((cam) => (
                             <div key={cam} className="checkbox-group">
-                                <label htmlFor={`camera-${cam}`}>{cam}</label>
                                 <input
                                     type="checkbox"
                                     id={`camera-${cam}`}
@@ -345,6 +280,7 @@ const ProductsPage = () => {
                                         toggleSelection(cam, selectedCamera, setSelectedCamera)
                                     }
                                 />
+                                <label htmlFor={`camera-${cam}`}>{cam}</label>
                             </div>
                         ))}
                     </div>
@@ -367,6 +303,7 @@ const ProductsPage = () => {
                             Search
                         </button>
                     </div>
+
                     {filteredProducts.length === 0 ? (
                         <p>No products match your filters.</p>
                     ) : (
