@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import './UpdateProduct.css';
+import './updateProduct.css';
 
 const UpdateProduct = () => {
     const { id } = useParams(); // Get product ID from URL parameters
