@@ -66,12 +66,12 @@ const GlassmorphicNavbar = () => {
                                     >
                                         Add Product
                                     </NavLink>
-                                    <NavLink
+                                    {/* <NavLink
                                         to="/seller/products"
                                         className={({ isActive }) => (isActive ? "active" : "")}
                                     >
                                         My Products
-                                    </NavLink>
+                                    </NavLink> */}
                                     <NavLink
                                         to="/seller/orders"
                                         className={({ isActive }) => (isActive ? "active" : "")}

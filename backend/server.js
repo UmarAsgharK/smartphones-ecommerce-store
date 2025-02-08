@@ -45,7 +45,7 @@ app.use(cors(corsOptions));
 
 
 
-// Health Check Route
+// Health Check Routes
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "API is running smoothly ..." });
 });

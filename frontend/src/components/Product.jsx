@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const Product = ({
+    // key, // Which is the "product_id" of the product that I am getting from product listings
+    productId,
     imageUrl,
     name,
     brand,
@@ -13,8 +15,7 @@ const Product = ({
     rating,
 }) => {
     return (
-        <Link to="/products/123">
-
+        <Link to={`/products/${productId}`}>
             <div className="product-card">
                 <div className="product-image-container">
                     <img
@@ -52,6 +53,8 @@ const Product = ({
 };
 
 Product.propTypes = {
+    key: PropTypes.string,
+    productId: PropTypes.string,
     imageUrl: PropTypes.string,
     name: PropTypes.string,
     brand: PropTypes.string,

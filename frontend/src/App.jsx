@@ -5,7 +5,7 @@ import "./App.css";
 // import Home from "./pages/public_routes/HomePage";
 import Register from "./pages/public_routes/SignUpPage";
 import Login from "./pages/public_routes/LoginPage";
-import ProductPage from "./pages/public_routes/ProductsPage";
+import ProductPage from "./pages/public_routes/ProductsListing";
 import ProductDetails from "./pages/public_routes/ProductDetails";
 
 // Buyer Pages
@@ -90,7 +90,11 @@ function App() {
               <Route path="users" element={<AdminUsers />} />
             </Route>
           </Route>
+
+          {/* Page not Found route */}
+          <Route path="*" element={<h1>Page Not Found</h1>} />
         </Routes>
+
       </div>
     </>
   );

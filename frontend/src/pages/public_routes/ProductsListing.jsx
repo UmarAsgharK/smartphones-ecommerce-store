@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Product from "../../components/Product";
-import "./ProductsPage.css";
+import "./ProductsListing.css";
 
 // Filter options (adjust these lists as needed)
 const brandOptions = [
@@ -309,17 +309,20 @@ const ProductsPage = () => {
                     ) : (
                         <div className="product-grid">
                             {filteredProducts.map((product) => (
-                                <Product
-                                    key={product.id}
-                                    imageUrl={product.images[0]}
-                                    name={product.name}
-                                    brand={product.brand}
-                                    price={product.price}
-                                    description={product.description}
-                                    stock={product.stock}
-                                    rating={product.rating}
-                                    specifications={product.specifications}
-                                />
+                                <>
+                                    <Product
+                                        key={product._id}
+                                        productId={product._id}
+                                        imageUrl={product.images[0]}
+                                        name={product.name}
+                                        brand={product.brand}
+                                        price={product.price}
+                                        description={product.description}
+                                        stock={product.stock}
+                                        rating={product.rating}
+                                        specifications={product.specifications}
+                                    />
+                                </>
                             ))}
                         </div>
                     )}

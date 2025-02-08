@@ -3,6 +3,7 @@ import { authenticate, authorizeRoles } from "../middlewares/auth.middleware.js"
 import {
     addToCart,
     getCart,
+    removeCartItem, // Import the new controller
     placeOrder,
     addReview,
     getOrders,
@@ -22,13 +23,16 @@ router.get("/dashboard", (req, res) => {
 router
     .route("/cart")
     .post(addToCart) // Add product to cart
-    .get(getCart); // View buyer's cart
+    .get(getCart);  // View buyer's cart
+
+// New route for removing a cart item
+router.delete("/cart/item/:itemId", removeCartItem);
 
 // Order Routes
 router
     .route("/orders")
     .post(placeOrder) // Place an order
-    .get(getOrders); // Get all orders of the buyer
+    .get(getOrders);  // Get all orders of the buyer
 
 router.get("/orders/:id", getOrderDetails); // Get details of a specific order
 

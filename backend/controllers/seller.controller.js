@@ -1,6 +1,8 @@
 import Product from "../models/product.model.js";
 import Order from "../models/order.model.js";
 import cloudinary from "../config/cloudinary.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
+
 // 1. Get All Products by Seller
 export const getSellerProducts = async (req, res) => {
     try {
@@ -16,7 +18,6 @@ export const getSellerProducts = async (req, res) => {
     }
 };
 
-// 2. Create a New Product
 export const createProduct = async (req, res) => {
     // Assuming req.user is set by your authentication middleware.
     console.log("Seller ID:", req.user.id);
@@ -26,7 +27,7 @@ export const createProduct = async (req, res) => {
         // Destructure the expected fields from req.body.
         const { name, brand, price, description, specifications, stock } = req.body;
 
-        // Parse specifications if it's sent as a JSON string.
+        // Parse specifications if sent as a JSON string.
         let specs;
         try {
             specs = typeof specifications === "string" ? JSON.parse(specifications) : specifications;
@@ -55,31 +56,29 @@ export const createProduct = async (req, res) => {
             });
         }
 
-        // Create an empty array to store the secure URLs from Cloudinary
+        // Create an empty array to store Cloudinary secure URLs
         let imageUrls = [];
 
-        // Multer (with your upload middleware) will attach an array of files to req.files.
+        // req.files is populated by the Multer middleware using memory storage
         if (req.files && req.files.length > 0) {
-            // Loop over each file and upload it to Cloudinary.
-            // (If you're using multer-storage-cloudinary, you might already have secure URLs in file.path.)
+            // Loop over each file and upload it to Cloudinary
             for (const file of req.files) {
-                const result = await cloudinary.uploader.upload(file.path, {
-                    folder: "phone_images", // Change to your desired folder
-                });
+                // Use the helper function with file.buffer
+                const result = await uploadToCloudinary(file.buffer, "phone_images");
                 imageUrls.push(result.secure_url);
             }
         }
 
-        // Create a new product document.
+        // Create a new product document (assuming a Product model exists)
         const product = new Product({
             name,
             brand,
             price,
             description,
-            specifications: specs, // Use the parsed specifications object
+            specifications: specs, // Parsed specifications object
             stock,
-            images: imageUrls, // Save the array of Cloudinary secure URLs
-            seller: req.user.id, // Associate the product with the authenticated user
+            images: imageUrls, // Array of Cloudinary secure URLs
+            seller: req.user.id, // Associate with authenticated user
         });
 
         console.log("Product to save:", product);
