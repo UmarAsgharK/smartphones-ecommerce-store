@@ -22,7 +22,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+                const response = await fetch(`https://smartphones-ecommerce-store-backend.onrender.com/api/products/${productId}`, {
                     credentials: "include",
                 });
                 if (!response.ok) {
@@ -75,7 +75,7 @@ const ProductDetails = () => {
     // Handle adding the product to the cart by sending a POST request to the API.
     const handleAddToCart = async () => {
         try {
-            const response = await fetch("http://localhost:5000/api/buyer/cart", {
+            const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/buyer/cart", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

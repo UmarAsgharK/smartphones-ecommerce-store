@@ -63,7 +63,7 @@ const ProductsPage = () => {
     // Fetch products from the backend on component mount
     useEffect(() => {
         // Adjust the URL as necessary for your environment
-        fetch("http://localhost:5000/api/products")
+        fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/products")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");

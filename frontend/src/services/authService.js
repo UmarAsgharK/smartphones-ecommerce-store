@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "https://smartphones-ecommerce-store-backend.onrender.com/api/auth";
 
 // Helper function to send POST requests
 const postRequest = async (url, body) => {

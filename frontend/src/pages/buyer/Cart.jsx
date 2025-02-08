@@ -11,7 +11,7 @@ const Cart = () => {
 
     // Fetch cart data when the component mounts
     useEffect(() => {
-        fetch("http://localhost:5000/api/buyer/cart", {
+        fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/buyer/cart", {
             credentials: "include",
         })
             .then((response) => {
@@ -34,7 +34,7 @@ const Cart = () => {
 
     // Remove an item from the cart and update the backend
     const handleRemove = (id) => {
-        fetch(`http://localhost:5000/api/buyer/cart/item/${id}`, {
+        fetch(`https://smartphones-ecommerce-store-backend.onrender.com/api/buyer/cart/item/${id}`, {
             method: "DELETE",
             credentials: "include",
         })

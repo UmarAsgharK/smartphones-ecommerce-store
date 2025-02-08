@@ -11,7 +11,7 @@ const AdminUsersPage = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch("http://localhost:5000/api/admin/users", {
+                const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/admin/users", {
                     method: "GET",
                     credentials: "include", // Ensures cookies (JWT) are sent with the request
                     headers: {
@@ -42,7 +42,7 @@ const AdminUsersPage = () => {
     // Delete a user by making a DELETE request to the backend
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/admin/users/${id}`, {
+            const response = await fetch(`https://smartphones-ecommerce-store-backend.onrender.com/api/admin/users/${id}`, {
                 method: "DELETE",
                 credentials: "include", // Send cookies along with the request
                 headers: {

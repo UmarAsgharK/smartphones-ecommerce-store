@@ -11,7 +11,8 @@ const Logout = () => {
 
         try {
             // Send logout request to backend
-            await fetch("http://localhost:5000/api/auth/logout", {
+            // await fetch("http://localhost:5000/api/auth/logout", {
+            await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/auth/logout", {
                 method: "POST",
                 credentials: "include", // Include cookies for proper logout
             });
