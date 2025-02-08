@@ -175,7 +175,7 @@ const ProductsPage = () => {
 
     return (
         <div className="home-container">
-            <h1 className="page-title">Product Listings</h1>
+            <h1 className="page-title">All Products</h1>
             <div className="content-area">
                 {/* Sidebar Filters */}
                 <aside className="sidebar">
