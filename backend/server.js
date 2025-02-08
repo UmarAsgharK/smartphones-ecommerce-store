@@ -37,15 +37,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// app.use(cors({
-//   origin: process.env.CLIENT_URL || "*", // Update based on your front-end domain for security
-//   methods: ["GET", "POST", "PATCH", "DELETE"], // Restrict allowed methods
-//   credentials: true, // Enable cookies if needed
-// }));
-// app.use(cors());
-
-
-
 // Health Check Routes
 app.get("/api/health", (req, res) => {
   res.status(200).json({ message: "API is running smoothly ..." });
