@@ -28,14 +28,15 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middleware
 app.use(express.json({ limit: "10mb" }));
-app.use(cookieParser());
+
 const corsOptions = {
-  origin: 'https://smartphones-ecommerce-store.vercel.app/', // Frontend URL (Adjust this if you're using a different port)
+  origin: 'https://smartphones-ecommerce-store.vercel.app', // ✅ Remove the trailing slash
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Allow credentials (cookies) to be sent
+  credentials: true,
 };
 app.use(cors(corsOptions));
+
 // app.use(cors({
 //   origin: process.env.CLIENT_URL || "*", // Update based on your front-end domain for security
 //   methods: ["GET", "POST", "PATCH", "DELETE"], // Restrict allowed methods
