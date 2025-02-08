@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './SellerProducts.css';
+import './sellerProducts.css';
 
 const SellerProducts = () => {
     // Mock data for seller's products
