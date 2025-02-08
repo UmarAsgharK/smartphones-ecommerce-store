@@ -30,7 +30,12 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 const corsOptions = {
-  origin: 'http://localhost:5173', // Frontend URL (Adjust this if you're using a different port)
+  origin: [
+    'https://smartphones-ecommerce-store.vercel.app/', // Frontend URL
+    'http://localhost:3000', // If testing frontend locally
+    'http://localhost:5173', // If using Vite frontend locally
+    'http://localhost:5000', // If testing APIs using Postman
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Allow credentials (cookies) to be sent
