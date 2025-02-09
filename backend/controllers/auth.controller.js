@@ -19,14 +19,14 @@ const setCookies = (res, accessToken, refreshToken) => {
     res.cookie("accessToken", accessToken, {
         httpOnly: true, // Prevent XSS attacks
         secure: true,
-        sameSite: "strict", // Prevent CSRF attacks,
+        sameSite: "none", // Prevent CSRF attacks,
         maxAge: 15 * 60 * 1000
     })
 
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true, // Prevent XSS attacks
         secure: true,
-        sameSite: "strict", // Prevent CSRF attacks,
+        sameSite: "none", // Prevent CSRF attacks,
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
 }
@@ -118,7 +118,7 @@ export const refreshTheAccessToken = async (req, res) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "strict", // Prevent CSRF attacks,
             maxAge: 15 * 60 * 1000,
         });
 
