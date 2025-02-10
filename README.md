@@ -114,5 +114,5 @@ This project is **open-source** and available under the **MIT License**.
 ### 📬 Contact
 💼 **LinkedIn:** [linkedin.com/in/umar-asghar-khan](https://www.linkedin.com/in/umar-asghar-khan)  
 📧 **Email:** umarasgharpro@gmail.com  
-🚀 **GitHub:** [https://github.com/yourusername](https://github.com/UmarAsgharK)  
+🚀 **GitHub:** [github.com/UmarAsgharK](https://github.com/UmarAsgharK)  
 
