@@ -4,6 +4,8 @@ import { loginUserAPI, logoutUserAPI } from "../services/authService";
 
 const AuthContext = createContext();
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
@@ -14,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const validateToken = async () => {
         setLoading(true);
         try {
-            const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/auth/refresh-token", {
+            const response = await fetch(`${API_URL}/auth/refresh-token`, {
                 method: "POST",
                 credentials: "include", // Include cookies
             });

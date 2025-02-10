@@ -1,8 +1,9 @@
-const API_URL = "https://smartphones-ecommerce-store-backend.onrender.com/api/auth";
+// ✅ API Base URL (Environment Variable)
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Helper function to send POST requests
-const postRequest = async (url, body) => {
-    const response = await fetch(url, {
+const postRequest = async (endpoint, body) => {
+    const response = await fetch(`${API_URL}${endpoint}`, { // ✅ Removed extra `/auth`
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -19,12 +20,12 @@ const postRequest = async (url, body) => {
     return response.json();
 };
 
-// Login User
+// ✅ Login User
 export const loginUserAPI = async (email, password) => {
-    return await postRequest(`${API_URL}/login`, { email, password });
+    return await postRequest("/auth/login", { email, password }); // ✅ Fixed endpoint
 };
 
-// Logout User
+// ✅ Logout User
 export const logoutUserAPI = async () => {
-    return await postRequest(`${API_URL}/logout`, {});
+    return await postRequest("/auth/logout", {}); // ✅ Fixed endpoint
 };

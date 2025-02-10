@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Product from "../../components/Product";
 import "./ProductsListing.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 // Filter options (adjust these lists as needed)
 const brandOptions = [
     "Apple",
@@ -63,7 +65,7 @@ const ProductsPage = () => {
     // Fetch products from the backend on component mount
     useEffect(() => {
         // Adjust the URL as necessary for your environment
-        fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/products")
+        fetch(`${API_URL}/products`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");

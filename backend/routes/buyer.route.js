@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 
 // Authenticate and Authorize all routes for buyers
-// router.use(authenticate, authorizeRoles("buyer"));
+router.use(authenticate, authorizeRoles("buyer"));
 
 router.get("/dashboard", (req, res) => {
     res.status(200).json({ message: "Welcome, Buyer!" });

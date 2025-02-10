@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetails.css';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ProductDetails = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);       // Fetched product data
@@ -22,7 +24,7 @@ const ProductDetails = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`https://smartphones-ecommerce-store-backend.onrender.com/api/products/${productId}`, {
+                const response = await fetch(`${API_URL}/products/${productId}`, {
                     credentials: "include",
                 });
                 if (!response.ok) {
@@ -75,7 +77,7 @@ const ProductDetails = () => {
     // Handle adding the product to the cart by sending a POST request to the API.
     const handleAddToCart = async () => {
         try {
-            const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/buyer/cart", {
+            const response = await fetch(`${API_URL}/buyer/cart`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,7 +86,7 @@ const ProductDetails = () => {
                 body: JSON.stringify({ productId, quantity }),
             });
             if (!response.ok) {
-                throw new Error(`Failed to add to cart (Status: ${response.status})`);
+                throw new Error(`Failed to add to cart(Status: ${response.status})`);
             }
             const data = await response.json();
             // You might want to show a success notification or update some global cart state here

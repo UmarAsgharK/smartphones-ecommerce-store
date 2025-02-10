@@ -30,12 +30,24 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Middleware
 app.use(express.json({ limit: "10mb" }));
 
+const allowedOrigins = [
+  "http://localhost:5173", // ✅ Allow local frontend (Vite default port)
+  "https://smartphones-ecommerce-store.vercel.app", // ✅ Allow deployed frontend
+];
+
 const corsOptions = {
-  origin: 'https://smartphones-ecommerce-store.vercel.app', // ✅ Remove the trailing slash
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // ✅ Allow request
+    } else {
+      callback(new Error("Not allowed by CORS")); // ❌ Block request
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, // ✅ Allow cookies and authentication headers
 };
+
 app.use(cors(corsOptions));
 
 // Health Check Routes

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./Users.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const AdminUsersPage = () => {
     const [userType, setUserType] = useState("all"); // Default: all users
     const [users, setUsers] = useState([]);
@@ -11,7 +13,7 @@ const AdminUsersPage = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/admin/users", {
+                const response = await fetch(`${API_URL}/admin/users`, {
                     method: "GET",
                     credentials: "include", // Ensures cookies (JWT) are sent with the request
                     headers: {
@@ -42,7 +44,7 @@ const AdminUsersPage = () => {
     // Delete a user by making a DELETE request to the backend
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`https://smartphones-ecommerce-store-backend.onrender.com/api/admin/users/${id}`, {
+            const response = await fetch(`${API_URL}/admin/users/${id}`, {
                 method: "DELETE",
                 credentials: "include", // Send cookies along with the request
                 headers: {

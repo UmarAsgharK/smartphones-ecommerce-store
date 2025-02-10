@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./AddProductForm.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const AddProduct = () => {
     const [productData, setProductData] = useState({
         name: "",
@@ -102,7 +104,7 @@ const AddProduct = () => {
 
             // Send the API request to the backend using fetch.
             // Note: Do not manually set the Content-Type header when sending FormData.
-            const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/seller/products", {
+            const response = await fetch(`${API_URL}/seller/products`, {
                 method: "POST",
                 credentials: "include", // Ensures cookies (JWT/session) are sent
                 body: formData,

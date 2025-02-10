@@ -2,6 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
+// ✅ Define API_URL at the top level (Best Practice)
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Logout = () => {
     const { setUser, setLoading } = useAuth();
     const navigate = useNavigate();
@@ -10,9 +13,8 @@ const Logout = () => {
         setLoading(true);
 
         try {
-            // Send logout request to backend
-            // await fetch("http://localhost:5000/api/auth/logout", {
-            await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/auth/logout", {
+            // ✅ API_URL is used correctly inside the function
+            await fetch(`${API_URL}/auth/logout`, {
                 method: "POST",
                 credentials: "include", // Include cookies for proper logout
             });

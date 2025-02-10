@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./signup.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const RegisterForm = () => {
     const [formData, setFormData] = useState({
         name: "",
@@ -44,7 +46,7 @@ const RegisterForm = () => {
 
 
         try {
-            const response = await fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/auth/register", {
+            const response = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Use useNavigate in v6
 import "./Cart.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Cart = () => {
     // We store only the items array from the fetched cart object.
     const [cartItems, setCartItems] = useState([]);
@@ -11,7 +13,7 @@ const Cart = () => {
 
     // Fetch cart data when the component mounts
     useEffect(() => {
-        fetch("https://smartphones-ecommerce-store-backend.onrender.com/api/buyer/cart", {
+        fetch(`${API_URL}/buyer/cart`, {
             credentials: "include",
         })
             .then((response) => {
@@ -34,7 +36,7 @@ const Cart = () => {
 
     // Remove an item from the cart and update the backend
     const handleRemove = (id) => {
-        fetch(`https://smartphones-ecommerce-store-backend.onrender.com/api/buyer/cart/item/${id}`, {
+        fetch(`${API_URL}/buyer/cart/item/${id}`, {
             method: "DELETE",
             credentials: "include",
         })
