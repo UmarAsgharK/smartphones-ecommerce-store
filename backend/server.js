@@ -24,6 +24,7 @@ connectDB();
 
 const app = express();
 
+app.use(cookieParser())
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middleware
