@@ -184,7 +184,7 @@ const ProductsPage = () => {
                     <h2>Filters</h2>
 
                     {/* Brand Filter */}
-                    <div className="filter-group">
+                    {/* <div className="filter-group">
                         <p>Brand:</p>
                         {brandOptions.map((brand) => (
                             <div key={brand} className="checkbox-group">
@@ -199,7 +199,7 @@ const ProductsPage = () => {
                                 <label htmlFor={`brand-${brand}`}>{brand}</label>
                             </div>
                         ))}
-                    </div>
+                    </div> */}
 
                     {/* Operating System Filter */}
                     <div className="filter-group">
